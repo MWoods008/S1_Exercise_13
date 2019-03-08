@@ -5,8 +5,8 @@
    Tutorial 11
    Tutorial Case
 
-   Author: 
-   Date:   
+   Author: Max Woods
+   Date:   3.7.19
 
    Global Variables
    ================
@@ -53,13 +53,79 @@
       multi-dimensional array, puzzle.
 	
 */
+window.onload = init;
 
+var puzzleCells;
+var cellBackground;
 
+function init() {
+   document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
+   document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle1Hint, puzzle1Rating, puzzle1);
 
+   //add event handlers for the puzzle buttons
+   var puzzleButtons = document.getElementsByClassName("puzzles");
+   for (var i = 0; i < puzzleButtons.length; i++) {
+      puzzleButtons[i].onclick = swapPuzzle;
+   }
+   setupPuzzle();
+}
 
+//add an event listener for the mouseup event
+document.addEventListener("mouseup", endBackground);
 
+function swapPuzzle(e) {
+   // retrieve the ID of the clicked button
+   var puzzleID = e.target.id;
 
-         
+   //retrieve the value of the clicked button
+   var puzzleTitle = e.target.value;
+   document.getElementById("puzzleTitle").innerHTML = puzzleTitle;
+
+   //display the puzzle based on the value of the puzzleID variable
+   switch (puzzleID){
+      case "puzzle1":
+         document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle1Hint, puzzle1Rating, puzzle1);
+         break;
+      case "puzzle2":
+         document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle2Hint, puzzle2Rating, puzzle2);
+         break;
+      case "puzzle3":
+         document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle3Hint, puzzle3Rating, puzzle3);
+         break;
+   }
+   setupPuzzle();
+}
+
+function setupPuzzle() {
+   puzzleCells = document.querySelectorAll("table#hanjieGrid td");
+
+   for(var i = 0; i < puzzleCells.length; i++){
+      puzzleCells[i].style.backgroundColor = "rgb(233, 207, 29)";
+      //set the cell background color in response to the mousedown event
+      puzzleCells[i].onmousedown = setBackground;
+   }
+}
+
+function setBackground(e){
+   cellBackground = "rgb(101, 101, 101)";
+   e.target.style.backgroundColor = cellBackground;
+
+   for (var i = 0; i < puzzleCells.length ; i++) {
+      puzzleCells[i].addEventListener("mouseenter", extendBackground);
+   }
+}
+
+function extendBackground(e) {
+   e.target.style.backgroundColor = cellBackground;
+}
+
+function endBackground(){
+   //remove the event listener for every puzzle cell
+   for (var i = 0; i < puzzleCells.length; i++){
+      puzzleCells[i].removeEventListener("mouseenter", extendBackground);
+   }
+}
+     
 /* ================================================================= */
 
 function drawPuzzle(hint, rating, puzzle) {
